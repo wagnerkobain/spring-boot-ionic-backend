@@ -3,6 +3,8 @@ package com.wagner.cursomc.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -26,7 +28,7 @@ public class ClienteService {
 
 	@Autowired
 	ClienteRepository repo;
-	
+
 	@Autowired
 	EnderecoRepository enderecoRepository;
 
@@ -36,6 +38,7 @@ public class ClienteService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 
+	@Transactional
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
 		obj = repo.save(obj);
@@ -43,6 +46,7 @@ public class ClienteService {
 		return obj;
 	}
 
+	@Transactional
 	public Cliente update(Cliente obj) {
 		Cliente newObj = find(obj.getId());
 		updateData(newObj, obj);
@@ -53,9 +57,9 @@ public class ClienteService {
 		find(id);
 		try {
 			repo.deleteById(id);
-			;
+			
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir porque há entidades relacionadas");
+			throw new DataIntegrityException("Não é possível excluir porque há pedidos relacionadas");
 		}
 
 	}
